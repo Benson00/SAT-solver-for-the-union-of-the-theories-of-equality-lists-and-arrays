@@ -67,4 +67,48 @@ public class Dag {
         return node.getCcpar();
     }
 
+    /**
+     * perform the union of two equivalence classes
+     * @param id1 id of first node
+     * @param id2 id of second node     
+     */
+    public void union(final int id1, final int id2){
+        // TO-DO
+        return;
+    }
+
+    /**
+     * perform merge of the congruence classes of two nodes
+     * @param id1 id of first node
+     * @param id2 id of second node
+     */
+    public void merge(final int id1, final int id2){
+        // TO-DO
+        return;
+    }
+
+    /**
+     * tests whethe two nodes are congruent
+     * @param id1 id of first node
+     * @param id2 id of second node
+     * @return <code>true</code> if they are congruent, <code>false</code> otherwise
+     */
+    public boolean congruent(final int id1, final int id2){
+        // TO-DO
+        return false;
+    } 
+
+
+
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("DAG Structure:\n");
+        for (Node node : nodes) {
+            sb.append(node).append("\n");
+        }
+        return sb.toString();
+    }
+
 }
