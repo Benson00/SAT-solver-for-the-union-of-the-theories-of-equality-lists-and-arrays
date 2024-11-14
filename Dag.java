@@ -33,4 +33,17 @@ public class Dag {
         this.nodes = new ArrayList<>();
     }
 
+    public Node getNode(int id) {
+        return this.nodes.get(id); 
+    }
+
+    public int find(int id){
+        Node n = this.nodes.get(id);
+        if (n.getFind() == id) {
+            return id;
+        } else {
+            return this.find(n.getFind());
+        }
+    }
+
 }
