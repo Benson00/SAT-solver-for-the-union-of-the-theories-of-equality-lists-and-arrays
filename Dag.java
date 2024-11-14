@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p> Represents a Directed Acyclic Graph (DAG) that consists of a list of nodes. </p>
@@ -33,10 +34,20 @@ public class Dag {
         this.nodes = new ArrayList<>();
     }
 
+    /**
+     * get node from id
+     * @param id the id of the node
+     * @return the node 
+     */
     public Node getNode(int id) {
         return this.nodes.get(id); 
     }
 
+    /**
+     * Get the class of the node from the id 
+     * @param id the id
+     * @return the class of the node
+     */
     public int find(int id){
         Node n = this.nodes.get(id);
         if (n.getFind() == id) {
@@ -44,6 +55,16 @@ public class Dag {
         } else {
             return this.find(n.getFind());
         }
+    }
+
+    /**
+     * Get the parents of the node from the id
+     * @param id the id
+     * @return the parents of the node
+     */
+    public Set<Integer> ccpar(int id){
+        Node node =  this.getNode(this.find(id));
+        return node.getCcpar();
     }
 
 }
