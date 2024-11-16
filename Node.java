@@ -147,12 +147,12 @@ public class Node {
     @Override
     public String toString() {
         return "Node{" +
-            "id=" + id +
-            ", fn='" + fn + '\'' +
-            ", args=" + args +
-            ", find=" + find +
-            ", ccpar=" + ccpar +
-            '}';
+            "\n\tid=" + id +
+            "\n\tfn='" + fn + '\'' +
+            "\n\targs=" + args +
+            "\n\tfind=" + find +
+            "\n\tccpar=" + ccpar +
+            "\n}";
     }
 
     public static void main(String[] args) {
