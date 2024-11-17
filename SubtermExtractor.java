@@ -16,7 +16,6 @@ public class SubtermExtractor {
     }
 
     public static Set<String> extractSubterms(String formula) {
-        System.out.println("FORMULA:" + formula);
         // Removing logic operators
         formula = formula.replaceAll("\\s*&\\s*|\\s*OR\\s*", ";");
         List<String> terms = Arrays.asList(formula.split(";"));

@@ -123,6 +123,18 @@ public class Dag {
                 nodes.add(buildNode(term, termToId, fnSet));
             }
 
+            for(Node node : nodes) {
+                
+                for (Node other : nodes){
+                    for (int i = 0; i < other.getArgs().size(); i++) {
+                        if(node.getId() == other.getArgs().get(i)) {
+                            node.setCcpar(other.getId());
+                        }
+                    }
+                }
+                
+            }
+
             return nodes;
         }
 

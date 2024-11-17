@@ -12,6 +12,8 @@ public class Main {
         // Initialize the DAG using the set of functions and the formula
         Dag dag = new Dag(fnSet, formula);
     
+        System.out.println("FORMULA: "+formula);
+        System.out.println("Subset of formula's terms: "+fnSet);
         // Print the constructed DAG
         System.out.println("Constructed DAG:");
         System.out.println(dag);

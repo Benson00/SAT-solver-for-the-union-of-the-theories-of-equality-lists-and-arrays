@@ -116,6 +116,12 @@ public class Node {
         return ccpar;
     }
 
+
+    public void setCcpar(int id) {
+        this.ccpar.add(id);
+    }
+
+    
     /**
      * Adds a parent node ID to the set of parent nodes.
      * 
