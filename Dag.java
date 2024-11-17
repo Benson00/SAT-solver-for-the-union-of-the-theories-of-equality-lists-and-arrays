@@ -1,5 +1,8 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -13,25 +16,9 @@ public class Dag {
     /**List of nodes in the DAG */
     private final List<Node> nodes; 
 
-    /**
-     * Constructs a DAG with a deep copy of the provided list of nodes.
-     * Each node in the provided list is copied, ensuring the DAG has independent
-     * nodes from the original list.
-     *
-     * @param nodes the list of nodes to initialize the DAG with
-     */
-    public Dag(final List<Node> nodes) {
-        this.nodes = new ArrayList<>();
-        for (Node node : nodes) {
-            this.nodes.add(new Node(node)); // Deep copy each node
-        }
-    }
 
-    /**
-     * Constructs an empty DAG with no nodes.
-     */
-    public Dag() {
-        this.nodes = new ArrayList<>();
+    public Dag(final Set<String> fnSet, String formula) {
+        this.nodes = new ArrayList<>(DAGBuilder.buildDAG(fnSet, formula));
     }
 
     /**
@@ -98,9 +85,6 @@ public class Dag {
         return false;
     } 
 
-
-
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -111,4 +95,130 @@ public class Dag {
         return sb.toString();
     }
 
+    /**
+     * Builds a Directed Acyclic Graph (DAG) from a set of function terms and a formula.
+     */
+    private class DAGBuilder {
+
+        /**
+         * Builds a DAG (list of nodes) from a set of function terms and a formula.
+         *
+         * @param fnSet   the set of function terms (e.g., {"f(a,g(b,c))", "g(b,c)", "a", "b", "c"})
+         * @param formula the formula string
+         * @return a list of nodes representing the DAG
+         * @throws IllegalArgumentException if a function term is missing in the fnSet
+         */
+        public static List<Node> buildDAG(Set<String> fnSet, String formula) {
+            Map<String, Integer> termToId = new HashMap<>(); // Map function term to unique ID
+            List<Node> nodes = new ArrayList<>();
+            int idCounter = 0;
+
+            // Assign unique IDs to all terms in fnSet
+            for (String term : fnSet) {
+                termToId.put(term, idCounter++);
+            }
+
+            // Build nodes for each term in the fnSet
+            for (String term : fnSet) {
+                nodes.add(buildNode(term, termToId, fnSet));
+            }
+
+            return nodes;
+        }
+
+        /**
+         * Builds a single Node from a term.
+         *
+         * @param term     the term string (e.g., "f(a,g(b,c))")
+         * @param termToId map from term to unique ID
+         * @param fnSet    the set of function terms
+         * @return the Node representing the term
+         * @throws IllegalArgumentException if a subterm is missing in fnSet
+         */
+        private static Node buildNode(String term, Map<String, Integer> termToId, Set<String> fnSet) {
+            int id = termToId.get(term);
+
+            // Extract function name and arguments
+            String fn = extractFunctionName(term);
+            List<String> args = extractArguments(term);
+
+            // Map arguments to their corresponding IDs
+            List<Integer> argIds = new ArrayList<>();
+            for (String arg : args) {
+                if (!termToId.containsKey(arg)) {
+                    throw new IllegalArgumentException("Function " + arg + " not found in fnSet.");
+                }
+                argIds.add(termToId.get(arg));
+            }
+
+            // Initialize the node with the extracted information
+            Node node = new Node(id, fn, argIds);
+            return node;
+        }
+
+        /**
+         * Extracts the function name from a term.
+         *
+         * @param term the term string (e.g., "f(a,g(b,c))")
+         * @return the function name (e.g., "f")
+         */
+        private static String extractFunctionName(String term) {
+            int parenIndex = term.indexOf('(');
+            if (parenIndex == -1) {
+                return term; // Term with no arguments (e.g., "a")
+            }
+            return term.substring(0, parenIndex);
+        }
+
+        /**
+         * Extracts the arguments from a term.
+         *
+         * @param term the term string (e.g., "f(a,g(b,c))")
+         * @return a list of argument strings (e.g., ["a", "g(b,c)"])
+         */
+        private static List<String> extractArguments(String term) {
+            int parenIndex = term.indexOf('(');
+            if (parenIndex == -1) {
+                return Collections.emptyList(); // No arguments
+            }
+
+            String argString = term.substring(parenIndex + 1, term.lastIndexOf(')'));
+            return splitArguments(argString);
+        }
+
+        /**
+         * Splits a string of arguments into individual arguments, accounting for nested terms.
+         *
+         * @param argString the string of arguments (e.g., "a,g(b,c)")
+         * @return a list of individual argument strings (e.g., ["a", "g(b,c)"])
+         */
+        private static List<String> splitArguments(String argString) {
+            List<String> arguments = new ArrayList<>();
+            int balance = 0;
+            StringBuilder currentArg = new StringBuilder();
+
+            for (char ch : argString.toCharArray()) {
+                if (ch == ',' && balance == 0) {
+                    arguments.add(currentArg.toString().trim());
+                    currentArg.setLength(0);
+                } else {
+                    currentArg.append(ch);
+                    if (ch == '(') {
+                        balance++;
+                    } else if (ch == ')') {
+                        balance--;
+                    }
+                }
+            }
+
+            if (currentArg.length() > 0) {
+                arguments.add(currentArg.toString().trim());
+            }
+
+            return arguments;
+        }
+    }
+
+
+    
 }
