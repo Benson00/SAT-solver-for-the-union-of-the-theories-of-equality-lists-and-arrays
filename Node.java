@@ -99,7 +99,7 @@ public class Node {
     }
 
     /**
-     * Sets the representative node ID for the congruence class.
+     * Set the representative node ID for the congruence class.
      * 
      * @param find the ID of the new representative node
      */
@@ -117,11 +117,15 @@ public class Node {
     }
 
 
+    /**
+     * modify the ccpar value adding the id in input
+     * @param id the id of the father
+     */
     public void setCcpar(int id) {
         this.ccpar.add(id);
     }
 
-    
+
     /**
      * Adds a parent node ID to the set of parent nodes.
      * 

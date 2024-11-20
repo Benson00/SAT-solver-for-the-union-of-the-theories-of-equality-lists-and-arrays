@@ -16,7 +16,11 @@ public class Dag {
     /**List of nodes in the DAG */
     private final List<Node> nodes; 
 
-
+    /**
+     * Constructor of the Dag from a subset of a formula and the formula.
+     * @param fnSet subset of the formula
+     * @param formula the formula
+     */
     public Dag(final Set<String> fnSet, String formula) {
         this.nodes = new ArrayList<>(DAGBuilder.buildDAG(fnSet, formula));
     }
