@@ -4,7 +4,7 @@ public class Main {
 
     public static void main(String[] args) {
         // Define a sample formula
-        String formula = "scolapasta(a,dasd(tonno(j,k),c)) & h(c) OR w(a) OR gggg(a,b,c,tonnarelli)";
+        String formula = "f(a,f(f(j,k),c)) = h(c) & w(a) ! f(a,b,c,tonnarelli) & y";
             
         // Extract function names (fnSet) from the formula using a hypothetical SubtermExtractor
         Set<String> fnSet = SubtermExtractor.extractSubterms(formula);

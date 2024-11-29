@@ -7,13 +7,13 @@ public class SubtermExtractor {
 
   
     /**
-     * extract the subterms in the formula
+     * extract the subterms in the formula using private function parse
      * @param formula the formula
      * @return a set of subterms
      */
     public static Set<String> extractSubterms(String formula) {
         // Removing logic operators
-        formula = formula.replaceAll("\\s*&\\s*|\\s*OR\\s*", ";");
+        formula = formula.replaceAll("\\s*&\\s*|\\s*OR\\s*|\\s*=\\s*|\\s*!\\s*", ";");
         formula = formula.trim();
         
         List<String> terms = Arrays.asList(formula.split(";"));
@@ -28,11 +28,19 @@ public class SubtermExtractor {
     }
 
 
+    /**
+     * private function for subterm extraction. modify subterms.
+     * @param term the term to parse
+     * @param subterms the subterms
+     */
     private static void parse(String term, Set<String> subterms){
         StringBuilder newTerm = new StringBuilder("");
         int numPar = 0;
         int numClose = 0;
         boolean atom = true;
+        if (term.length() == 1) {
+            subterms.add(term);
+        }
         for (int i = 0; i < term.length(); i++) {
             char currentTerm = term.charAt(i);  
             if (currentTerm == '(') {
@@ -80,7 +88,7 @@ public class SubtermExtractor {
         parse("scolapasta(a,dasd(tonno(j,k),c))", subterms);
         System.out.println(subterms);  
 
-        String formula = "scolapasta(a,dasd(tonno(j,k),c)) & h(c) OR w(a) OR gggg(a,b,c,tonnarelli)";
+        String formula = "scolapasta(a,dasd(tonno(j,k),c)) = h(c) & w(a) ! gggg(a,b,c,tonnarelli) & y";
         Set<String> fnSet = SubtermExtractor.extractSubterms(formula);
         System.out.println("FINAL SET: "+fnSet);
 

@@ -116,6 +116,10 @@ public class Node {
         return ccpar;
     }
 
+    public void clearCcpar(){
+        this.ccpar.clear();
+    }
+
 
     /**
      * modify the ccpar value adding the id in input
@@ -142,6 +146,20 @@ public class Node {
      */
     public void removeParent(int parentId) {
         ccpar.remove(parentId);
+    }
+
+    public void addCcpar(Set<Integer> cp2){
+        for (int i : cp2){
+            this.ccpar.add(i);
+        }
+    }
+
+    /**
+     * Return the len of the args
+     * @return the len of the args
+     */
+    public int lenArgs(){
+        return this.args.size();
     }
 
     /**
