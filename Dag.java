@@ -80,9 +80,9 @@ public class Dag {
      * @param id2 id of second node     
      */
     public void union(final int id1, final int id2){
+        System.out.println("UNION: " + id1 + " " + id2);
         Node n1 = getNode(this.find(id1));
         Node n2 = getNode(this.find(id2));
-        System.out.println(n1.getCcpar().size() + " " + n2.getCcpar().size());
         if (n1.getCcpar().size() < n2.getCcpar().size()){
             
             int temp = n1.getFind();
@@ -127,7 +127,7 @@ public class Dag {
      * <pre>
      * Algorithm:
      * 1. Define a recursive function merge(i1, i2):
-     *       If `find(i1) == find(i2)`, proceed:
+     *       If `find(i1) != find(i2)`, proceed:
      *           Let Pi1 = ccpar(i1) (parent set of i1).
      *           Let Pi2 = ccpar(i2) (parent set of i2).
      *           Union i1 and i2 into the same equivalence class.
@@ -140,19 +140,18 @@ public class Dag {
      * @param id2 the ID of the second node
      */
     public void merge(final int id1, final int id2){
-        if (find(id1) == find(id2)){} {
-            Set<Integer> Pi1 = ccpar(id1);   
-            Set<Integer> Pi2 = ccpar(id2); 
-            //  pick the one with the largest ccpar set
-            this.union(id2, id1);
-            for (int i : Pi2) {
-                for (int j : Pi1) {
-                    if (i!=j) {
-                        merge(id1, id2);
-                    }                    
+        System.out.println("MERGING: " + id1 + " " + id2);
+        if (find(id1) != find(id2)) {
+            Set<Integer> Pi1 = Set.copyOf(this.ccpar(id1));
+            Set<Integer> Pi2 = Set.copyOf(this.ccpar(id2));
+            union(id1, id2);
+            for (int t1 : Pi1) {
+                for (int t2 : Pi2) {
+                    if ((t1!=t2) && (find(t1) != find(t2)) && congruent(t1, t2)) {
+                        merge(t1, t2);
+                    }
                 }
             }
-
         }
     }
 
@@ -177,8 +176,9 @@ public class Dag {
         if (n1.lenArgs() != n2.lenArgs()) {
             return false;
         }
-        boolean b = false;
+        
         for (int i : n1.getArgs()) {
+            boolean b = false;
             for (int j : n2.getArgs()) {
                 Node temp1 = getNode(i);
                 Node temp2 = getNode(j);
@@ -186,10 +186,10 @@ public class Dag {
                     b = true;
                 }
             }
+            if (!b) return false;
         }
-        if (!b) {
-            return false;
-        }
+        
+        
         return true;
     } 
 
@@ -341,8 +341,28 @@ public class Dag {
 
 
     public static void main(String[] args) {
-        testUnion();
-    }    
+        //testUnion();
+        System.out.println("**********************************************");
+        //a,b,f(a,b),f(f(a,b))
+        List<Node> nodes = new ArrayList<Node>();
+        Node t = new Node(0, "f", List.of(1, 2));
+        nodes.add(t);
+        t = new Node(1, "a", List.of());
+        nodes.add(t);
+        t = new Node(2, "b", List.of());
+        nodes.add(t);
+        t = new Node(3, "f", List.of(0,2));
+        nodes.add(t);
+        nodes.get(1).addCcpar(Set.of(0));
+        nodes.get(0).addCcpar(Set.of(3));
+        nodes.get(2).addCcpar(Set.of(0,3));
+        Dag dag = new Dag(nodes);
+        System.out.println(dag);
+        System.out.println("**********************************************");
+        System.out.println("MERGE TEST");
+        dag.merge(0, 1); 
+        System.out.println(dag);
+    } 
 
 
 
@@ -357,7 +377,7 @@ public class Dag {
 
 
 
-    // FUNZIONI DI TEST
+    // test functions
     private static void testUnion(){
         System.out.println("**********************************************");
         List<Node> nodes = new ArrayList<Node>();
