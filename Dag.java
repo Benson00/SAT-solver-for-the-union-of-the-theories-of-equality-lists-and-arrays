@@ -25,6 +25,10 @@ public class Dag {
         this.nodes = new ArrayList<>(DAGBuilder.buildDAG(fnSet, formula));
     }
 
+    /**
+     * Build a dag from a list of nodes
+     * @param nodes list of nodes
+     */
     private Dag(final List<Node> nodes) {
         this.nodes = nodes;
         for (Node node : nodes) {
@@ -339,9 +343,19 @@ public class Dag {
         }
     }
 
-
+    
     public static void main(String[] args) {
-        //testUnion();
+        testUnion();
+        testMerge();
+    } 
+
+
+
+
+    // test functions
+
+
+    private static void testMerge(){
         System.out.println("**********************************************");
         //a,b,f(a,b),f(f(a,b))
         List<Node> nodes = new ArrayList<Node>();
@@ -362,22 +376,9 @@ public class Dag {
         System.out.println("MERGE TEST");
         dag.merge(0, 1); 
         System.out.println(dag);
-    } 
+    }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    // test functions
     private static void testUnion(){
         System.out.println("**********************************************");
         List<Node> nodes = new ArrayList<Node>();

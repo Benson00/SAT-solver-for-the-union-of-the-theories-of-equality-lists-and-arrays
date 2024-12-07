@@ -3,7 +3,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SubtermExtractor {
+/**
+ * Class for utility functions
+ */
+public class SATUtils {
 
   
     /**
@@ -89,7 +92,7 @@ public class SubtermExtractor {
         System.out.println(subterms);  
 
         String formula = "scolapasta(a,dasd(tonno(j,k),c)) = h(c) & w(a) ! gggg(a,b,c,tonnarelli) & y";
-        Set<String> fnSet = SubtermExtractor.extractSubterms(formula);
+        Set<String> fnSet = SATUtils.extractSubterms(formula);
         System.out.println("FINAL SET: "+fnSet);
 
     }

@@ -7,7 +7,7 @@ public class Main {
         String formula = "f(a,f(f(j,k),c)) = h(c) & w(a) ! f(a,b,c,tonnarelli) & y";
             
         // Extract function names (fnSet) from the formula using a hypothetical SubtermExtractor
-        Set<String> fnSet = SubtermExtractor.extractSubterms(formula);
+        Set<String> fnSet = SATUtils.extractSubterms(formula);
         System.out.println(fnSet);
         // Initialize the DAG using the set of functions and the formula
         Dag dag = new Dag(fnSet, formula);
