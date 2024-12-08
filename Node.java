@@ -32,6 +32,7 @@ public class Node {
     private final List<Integer> args; // List of argument IDs representing subterms
     private int find;                 // ID of the representative node for the congruence class
     private Set<Integer> ccpar;       // Set of parent node IDs in the DAG
+    private final String term;
 
     /**
      * Constructs a Node with the specified id, function name, and arguments.
@@ -41,12 +42,13 @@ public class Node {
      * @param fn the function name associated with the node
      * @param args the list of argument IDs for this node
      */
-    public Node(int id, String fn, List<Integer> args) {
+    public Node(int id, String fn, List<Integer> args, String term) {
         this.id = id;
         this.fn = fn;
         this.args = args;
         this.find = id;               // Initially, the node is its own representative
         this.ccpar = new HashSet<>();  // Initialize an empty set for parent nodes
+        this.term = term.trim(); 
     }
 
     /**
@@ -55,6 +57,7 @@ public class Node {
      * @param other the node to copy
      */
     public Node(Node other) {
+        this.term = other.term;
         this.id = other.id;
         this.fn = other.fn;
         this.args = other.args; // Shallow copy, since args is immutable in this context
@@ -139,6 +142,10 @@ public class Node {
         ccpar.add(parentId);
     }
 
+    public String getTerm(){
+        return this.term;
+    }
+
     /**
      * Removes a parent node ID from the set of parent nodes.
      * 
@@ -180,12 +187,8 @@ public class Node {
             "\n\targs=" + args +
             "\n\tfind=" + find +
             "\n\tccpar=" + ccpar +
+            "\n\tterm=" + term +
             "\n}";
-    }
-
-    public static void main(String[] args) {
-        Node node1 = new Node(1, "f", Arrays.asList(2, 3));
-        System.out.println("State of node1: " + node1);
     }
 
 }

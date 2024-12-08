@@ -91,9 +91,41 @@ public class SATUtils {
         parse("scolapasta(a,dasd(tonno(j,k),c))", subterms);
         System.out.println(subterms);  
 
-        String formula = "scolapasta(a,dasd(tonno(j,k),c)) = h(c) & w(a) ! gggg(a,b,c,tonnarelli) & y";
+        String formula = "(scolapasta(a,dasd(tonno(j,k),c)) = h(c)) OR w(a) ! gggg(a,b,c,tonnarelli) & y";
         Set<String> fnSet = SATUtils.extractSubterms(formula);
         System.out.println("FINAL SET: "+fnSet);
-
     }
+
+    /**
+     * Extract equality rules from a formula in DNF
+     * @param formula the formula
+     * @return the rules
+     */
+    public static Set<String> extractERules(String formula) {
+        Set<String> rules = new HashSet<String>();
+        String[] s = formula.split("&");
+        for (String rule : s){
+            if (rule.contains("=")) {
+                rules.add(rule);   
+            }            
+        }
+        return rules;
+    }
+
+    /**
+     * Extract disequality rules from a formula in DNF
+     * @param formula the formula
+     * @return the rules
+     */
+    public static Set<String> extractDRules(String formula) {
+        Set<String> rules = new HashSet<String>();
+        String[] s = formula.split("&");
+        for (String rule : s){
+            if (rule.contains("!")) {
+                rules.add(rule);   
+            }            
+        }
+        return rules;
+    }
+
 }

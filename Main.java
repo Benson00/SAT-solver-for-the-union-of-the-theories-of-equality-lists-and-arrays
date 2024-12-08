@@ -4,19 +4,13 @@ public class Main {
 
     public static void main(String[] args) {
         // Define a sample formula
-        String formula = "f(a,f(f(j,k),c)) = h(c) & w(a) ! f(a,b,c,tonnarelli) & y";
-            
-        // Extract function names (fnSet) from the formula using a hypothetical SubtermExtractor
-        Set<String> fnSet = SATUtils.extractSubterms(formula);
-        System.out.println(fnSet);
-        // Initialize the DAG using the set of functions and the formula
-        Dag dag = new Dag(fnSet, formula);
-    
-        System.out.println("FORMULA: "+formula);
-        System.out.println("Subset of formula's terms: "+fnSet);
-        // Print the constructed DAG
-        System.out.println("Constructed DAG:");
-        System.out.println(dag);
+        String formula = "f(a,b) = a & f(f(a,b),b) ! a";
+        EqualitySolver solver = new EqualitySolver();
+        solver.solve(formula);
+
+        formula = "f(f(f(a))) = a & f(f(f(f(f(a))))) = a & f(a) ! a";
+        solver.solve(formula);
+        
     }
 
 }

@@ -42,6 +42,17 @@ public class Dag {
         }
     }
 
+    public int getIdFromTerm(String term){
+        
+        for(Node node : nodes){
+            if (term.trim().equals(node.getTerm().trim())) {
+                
+                return node.getId();
+            }
+        }
+        throw new IllegalArgumentException("Invalid term: " + term);
+    }
+
     /**
      * get node from id
      * @param id the id of the node
@@ -52,13 +63,21 @@ public class Dag {
     }
 
     /**
-     * Get the class of the node from the id 
+     * Non recursive version of the find.
+     * Get the class of the node from the id.
      * @param id the id
      * @return the class of the node
      */
     public int find(int id){
+        /* Node n = this.nodes.get(id);
+        if (n.getFind() == id) {
+            return id;
+        }else{
+            return this.find(n.getFind());
+        } */
         return this.nodes.get(id).getFind();
     }
+
 
     /**
      * Get the parents of the node from the id
@@ -71,7 +90,10 @@ public class Dag {
     }
 
     /**
-     * perform the union of two equivalence classes. 
+     * perform the union of two equivalence classes.
+     * The representative of the union class is the one with the largest ccpar. 
+     * Updates the find field of all the terms in the class whose representative is not chosen 
+     * as representative of the union class.
         <pre>
             let union i1 i2 =
             let n1 = node (find i1) in
@@ -89,11 +111,11 @@ public class Dag {
         Node n2 = getNode(this.find(id2));
         if (n1.getCcpar().size() < n2.getCcpar().size()){
             
-            int temp = n1.getFind();
+            
             n1.setFind(n2.getFind());
             for(Node n : this.nodes){
                 int t = n.getFind();
-                if (t == temp) {
+                if (t == n1.getId()) {
                     n.setFind(n2.getFind());
                 }
             }
@@ -104,11 +126,10 @@ public class Dag {
             n1.clearCcpar();
         }else{
             n2.setFind(n1.getFind());
-            int temp = n2.getFind();
             
             for(Node n : this.nodes){
                 int t = n.getFind();
-                if (t == temp) {
+                if (t == n2.getId()) {
                     n.setFind(n1.getFind());
                 }
             }
@@ -235,6 +256,7 @@ public class Dag {
                 nodes.add(buildNode(term, termToId, fnSet));
             }
 
+            // set ccpar
             for(Node node : nodes) {
                 
                 for (Node other : nodes){
@@ -246,6 +268,8 @@ public class Dag {
                 }
                 
             }
+
+            Dag dag = new Dag(nodes);          
 
             return nodes;
         }
@@ -276,7 +300,7 @@ public class Dag {
             }
 
             // Initialize the node with the extracted information
-            Node node = new Node(id, fn, argIds);
+            Node node = new Node(id, fn, argIds, term);
             return node;
         }
 
@@ -343,65 +367,4 @@ public class Dag {
         }
     }
 
-    
-    public static void main(String[] args) {
-        testUnion();
-        testMerge();
-    } 
-
-
-
-
-    // test functions
-
-
-    private static void testMerge(){
-        System.out.println("**********************************************");
-        //a,b,f(a,b),f(f(a,b))
-        List<Node> nodes = new ArrayList<Node>();
-        Node t = new Node(0, "f", List.of(1, 2));
-        nodes.add(t);
-        t = new Node(1, "a", List.of());
-        nodes.add(t);
-        t = new Node(2, "b", List.of());
-        nodes.add(t);
-        t = new Node(3, "f", List.of(0,2));
-        nodes.add(t);
-        nodes.get(1).addCcpar(Set.of(0));
-        nodes.get(0).addCcpar(Set.of(3));
-        nodes.get(2).addCcpar(Set.of(0,3));
-        Dag dag = new Dag(nodes);
-        System.out.println(dag);
-        System.out.println("**********************************************");
-        System.out.println("MERGE TEST");
-        dag.merge(0, 1); 
-        System.out.println(dag);
-    }
-
-
-    private static void testUnion(){
-        System.out.println("**********************************************");
-        List<Node> nodes = new ArrayList<Node>();
-        Node t = new Node(0, "f", List.of(2, 1));
-        nodes.add(t);
-        t = new Node(1, "a", List.of());
-        t.setFind(0);
-        nodes.add(t);
-        t = new Node(2, "b", List.of());
-        t.setFind(0);
-        nodes.add(t);
-        t = new Node(3, "f", List.of(2,1));
-        nodes.add(t);
-        t = new Node(4, "u", List.of(3));
-        nodes.add(t);
-        nodes.get(1).addCcpar(Set.of(0,3));
-        nodes.get(2).addCcpar(Set.of(0,3));
-        nodes.get(3).addCcpar(Set.of(4));
-        Dag dag = new Dag(nodes);
-        System.out.println(dag);
-        System.out.println("**********************************************");
-        System.out.println("UNION TEST");
-        dag.union(0, 3); 
-        System.out.println(dag);
-    }
 }
