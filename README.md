@@ -1,4 +1,4 @@
-# Implementation of a solver for the union of the theories of equality, lists, and arrays
+# Implementation of a SAT solver for the union of the theories of equality, lists, and arrays
 
 Prototype solver that determines the satisfiability of a set of literals in the union of the quantifier-free fragments of three theories: 
 
