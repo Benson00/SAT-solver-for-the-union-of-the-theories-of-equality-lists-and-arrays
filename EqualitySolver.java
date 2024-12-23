@@ -1,12 +1,21 @@
 import java.util.Set;
 
+
+/**
+ * <p>The <code>EqualitySolver</code> class provides methods to determine the satisfiability 
+ * of a formula in the theory of equality. It processes a formula to extract equality 
+ * and disequality rules, builds a directed acyclic graph (DAG) representation of the formula, 
+ * and applies congruence closure algorithm to evaluate satisfiability.</p>
+ * 
+ * <p>The result of the evaluation indicates whether the given formula is satisfiable 
+ * in the theory of equality.</p>
+ */
 public class EqualitySolver {
     
-
-
-
     /**
      * Return SAT if the formula is satisfiable in theory of equality. UNSAT otherwise.
+     * @param formula the formula 
+     * @return true if the formula is satisfiable in theory of equality, false otherwise.
      */
     public boolean solve(String formula){
         
@@ -18,7 +27,7 @@ public class EqualitySolver {
         Set<String> eRules = SATUtils.extractERules(formula);
         Set<String> dRules = SATUtils.extractDRules(formula);
         infEqualities(eRules, dag);
-        System.out.println(dag);
+        
         if (checkRules(dRules, dag)){
             System.out.println("SAT");
             return false;
@@ -27,7 +36,14 @@ public class EqualitySolver {
         return true;
     }
     
-        
+    
+    /**
+     * Checks if the disequalities are respected.
+     * 
+     * @param dRules the list of disequality rules to be checked
+     * @param dag the directed acyclic graph (DAG) to validate against
+     * @return true if all disequality rules are respected, false otherwise
+     */
     private boolean checkRules(Set<String> dRules, Dag dag) {
         for(String rule : dRules){
             rule = rule.trim();
@@ -43,9 +59,9 @@ public class EqualitySolver {
     }
         
     /**
-     * modify dag
-     * @param rules
-     * @param dag
+     * inference equalities, modify the dag
+     * @param rules the rules
+     * @param dag the dag
      */
     public void infEqualities(Set<String> rules, Dag dag){
         for(String rule : rules){

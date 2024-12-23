@@ -18,11 +18,12 @@ public class SATUtils {
         // Removing logic operators
         formula = formula.replaceAll("\\s*&\\s*|\\s*OR\\s*|\\s*=\\s*|\\s*!\\s*", ";");
         formula = formula.trim();
-        
         List<String> terms = Arrays.asList(formula.split(";"));
-        System.out.println("TERMS: "+terms);
         Set<String> subterms = new HashSet<>();
         for (String term : terms) {
+            if (!term.contains("(")) {
+                subterms.add(term);
+            }
             for(int i = 0; i <term.length(); i++) {
                 parse(term, subterms);
             }
@@ -79,22 +80,7 @@ public class SATUtils {
     }
 
 
-      public static void main(String[] args) {
-        Set<String> subterms = new HashSet<String>();
-        System.out.println("SUBSET: "+subterms);
-        parse("func(a,g(t(j,k),c))", subterms);
-        System.out.println(subterms);
-        subterms = new HashSet<String>();
-        parse("f(f2(f3(f4(f5(a,b),c))))", subterms);
-        System.out.println(subterms);
-        subterms = new HashSet<String>();
-        parse("scolapasta(a,dasd(tonno(j,k),c))", subterms);
-        System.out.println(subterms);  
 
-        String formula = "(scolapasta(a,dasd(tonno(j,k),c)) = h(c)) OR w(a) ! gggg(a,b,c,tonnarelli) & y";
-        Set<String> fnSet = SATUtils.extractSubterms(formula);
-        System.out.println("FINAL SET: "+fnSet);
-    }
 
     /**
      * Extract equality rules from a formula in DNF
@@ -127,5 +113,5 @@ public class SATUtils {
         }
         return rules;
     }
-
+    
 }

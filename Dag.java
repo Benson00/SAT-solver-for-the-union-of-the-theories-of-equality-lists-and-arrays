@@ -1,17 +1,16 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 /**
  * <p> Represents a Directed Acyclic Graph (DAG) that consists of a list of nodes. </p>
- * 
- * <p> This class supports initialization with an existing list of nodes, where each
- * node is copied to maintain independent state. </p>
+ * Contains methods for the congruence closure algorithm.
  */
-public class Dag {
+public class Dag implements Iterable<Node>{
     
     /**List of nodes in the DAG */
     private final List<Node> nodes; 
@@ -40,6 +39,24 @@ public class Dag {
                 }
             }
         }
+    }
+
+    /**
+     * add a node to the dag.
+     * @param n the node
+     */
+    public void addNode(Node n){
+        nodes.add(n);
+    }
+
+    public int countID(){
+        return nodes.size()-1;
+    }
+
+
+    @Override
+    public Iterator<Node> iterator() {
+        return nodes.iterator();
     }
 
     public int getIdFromTerm(String term){
