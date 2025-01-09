@@ -1,8 +1,20 @@
+package Solver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 public class ListSolver {
+
+    
+    private boolean forbiddenListH = true;
+
+    public void setForbiddenListHToFalse(){
+        this.forbiddenListH = false;
+    }
+
+    public void setForbiddenListHToTrue(){
+        this.forbiddenListH = true;
+    }
 
     
     /**
@@ -65,7 +77,9 @@ public class ListSolver {
     }
 
     public boolean solve(String formula){
-        
+        formula = SATUtils.dropQuantifier(formula);
+        formula = SATUtils.rewritePredicate(formula);
+        System.out.println(formula);
         //atoms
         String originalFormula = formula;
         
@@ -81,8 +95,6 @@ public class ListSolver {
             • add car(n) to the DAG and merge car(n) n.args[1];
             • add cdr(n) to the DAG and merge cdr(n) n.args[2] 
         */
-        List<Node> newCar = new ArrayList<Node>(); 
-        List<Node> newCdr = new ArrayList<Node>(); 
         int id = dag.countID();
         int size = dag.countID();
         for (int i = 0; i < size; i++){
@@ -109,21 +121,39 @@ public class ListSolver {
 
         Set<String> eRules = SATUtils.extractERules(formula);
         Set<String> dRules = SATUtils.extractDRules(formula);
+        if(forbiddenListH){
+            dag.setForbiddenList(dRules);
+        }
         infEqualities(eRules, dag);
-        if (!checkRules(dRules, dag)){
-            return false;
+        //System.out.println(dag);
+        if(!dag.forbidden){
+            if (!checkRules(dRules, dag)){
+                return false;
+            }
+        }else{
+            if (!dag.forbiddenSat) {
+                return false;
+            }else{
+                if (!checkRules(dRules, dag)){
+                    return false;
+                }
+            }
         }
         //For i ∈ {1,...,ℓ} if ∃v. find v = find ui ∧ v.fn = cons, return unsatisfiable by axiom (atom).
         List<String> atoms = saveAtoms(originalFormula);
         for(String atom : atoms) {
+            
             int idV = dag.getIdFromTerm(atom);
-            Node v = dag.getNode(idV);
-            for(Node n : dag)
-            if (((dag.find(idV) == dag.find(n.getId()))) && (v.getFn().equals("cons"))) {
-                return false;
+            //System.out.println(idV);
+            for(Node n : dag){
+                
+                if (((dag.find(idV) == dag.find(n.getId()))) && (n.getFn().equals("cons"))) {
+                    //System.out.println("QUIIII");
+                    return false;
+                }
             }
         }
-
+        //System.out.println(dag);
         return true;
 
         
@@ -145,16 +175,6 @@ public class ListSolver {
         }
     }
 
-    public static void main(String[] args) {
-        ListSolver ls = new ListSolver();
-        String formula = "car(x) = car(y) & cdr(x) = cdr(y) & f(x) ! f(y) & -atom(x) & -atom(y)";
-        boolean result = ls.solve(formula);
-        if (result) {
-            System.out.println("SAT");
-        }else{
-            System.out.println("UNSAT");
-        }
-    }
 
     /**
      * Checks if the disequalities are respected.

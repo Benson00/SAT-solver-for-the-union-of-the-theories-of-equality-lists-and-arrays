@@ -1,0 +1,15 @@
+FORMULA: car(x) = car(y) & cdr(x) = cdr(y) & f(x) ! f(y) & -atom(x) & -atom(y)
+UNSAT
+
+FORMULA: car(x) = y & cdr(x) = z & x!cons(y,z)
+SAT
+
+FORMULA: -atom(x) & car(x) = y & cdr(x) = z & x ! cons(y,z)
+UNSAT
+
+FORMULA: atom(x) & -atom(x)
+UNSAT
+
+FORMULA: atom(x) & cons(x,y) = x
+UNSAT
+

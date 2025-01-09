@@ -1,10 +1,11 @@
+package Solver;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 /**
- * Class for utility functions
+ * Utils class
  */
 public class SATUtils {
 
@@ -113,5 +114,34 @@ public class SATUtils {
         }
         return rules;
     }
+
+
+    public static String rewritePredicate(String formula){
+            String newFormula = "";
+            //gestisci i predicati, escludi il caso di atom e not atom che sono gestiti in autonomia nelle liste.
+            String[] s = formula.split("&");
+            for (String part : s) {
+                part = part.trim();
+                if (!part.contains("=") && !part.contains("!") & !part.startsWith("atom") & !part.startsWith("-atom")) {
+                    //This is a predicate!
+                    if (part.startsWith("-")) {
+                        newFormula += part.substring(1)+" ! T";
+                    }else{
+                        newFormula += part+" = T";
+                    }
+                }else{
+                    newFormula += part;
+                }
+                newFormula += " & ";
+            }
+            return newFormula.substring(0, newFormula.length()-2);   
+        }
+        
     
+        public static String dropQuantifier(String formula){
+            formula = formula.replaceAll("forall\\[.*?\\]", "");
+            formula = formula.replaceAll("exists\\[.*?\\]", "");
+            formula = formula.replaceAll("\\{", "").replaceAll("\\}", "");
+            return formula;
+        }
 }

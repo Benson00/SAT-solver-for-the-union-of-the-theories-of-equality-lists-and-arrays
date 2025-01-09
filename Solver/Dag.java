@@ -1,6 +1,8 @@
+package Solver;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +16,39 @@ public class Dag implements Iterable<Node>{
     
     /**List of nodes in the DAG */
     private final List<Node> nodes; 
+
+    private final Map<Integer, Set<Integer>> forbiddenList = new HashMap<Integer, Set<Integer>>();
+    public boolean forbidden = false;
+    public boolean forbiddenSat = true;
+
+    public void setForbiddenList (Set<String> rules){
+        this.forbidden = true;
+        for(String rule : rules){
+            rule = rule.trim();
+            String[] s = rule.split("!");
+            int id1 = this.getIdFromTerm(s[0]);
+            int id2 = this.getIdFromTerm(s[1]);
+            if (!forbiddenList.containsKey(id1)) {
+                this.forbiddenList.put(id1, new HashSet<Integer>()); 
+                this.forbiddenList.get(id1).add(id2); 
+            }else{
+                this.forbiddenList.get(id1).add(id2);
+            }
+
+            if (!forbiddenList.containsKey(id2)) {
+                this.forbiddenList.put(id2, new HashSet<Integer>()); 
+                this.forbiddenList.get(id2).add(id1);
+            }else{
+                this.forbiddenList.get(id2).add(id1);
+            }  
+        }
+        for(Node n:nodes){
+            if(!forbiddenList.containsKey(n.getId())){
+                this.forbiddenList.put(n.getId(), new HashSet<Integer>()); 
+            }
+        }
+    }
+
 
     /**
      * Constructor of the Dag from a subset of a formula and the formula.
@@ -115,9 +150,9 @@ public class Dag implements Iterable<Node>{
             let union i1 i2 =
             let n1 = node (find i1) in
             let n2 = node (find i2) in
-            n1.find ← n2.find;
-            n2.ccpar ← n1.ccpar ∪ n2.ccpar;
-            n1.ccpar ← ∅
+            n1.find <- n2.find;
+            n2.ccpar <- n1.ccpar ∪ n2.ccpar;
+            n1.ccpar <- ∅
         </pre> 
      * @param id1 id of first node
      * @param id2 id of second node     
@@ -136,11 +171,19 @@ public class Dag implements Iterable<Node>{
                     n.setFind(n2.getFind());
                 }
             }
-            Set<Integer> set = n2.getCcpar();
+            Set<Integer> set = n1.getCcpar();
             for (int i : set){
                 n2.setCcpar(i);
             }
             n1.clearCcpar();
+            
+            if (forbidden) {
+                Set<Integer> l = this.forbiddenList.get(id1);
+                this.forbiddenList.get(id2).addAll(l);
+                this.forbiddenList.get(id1).clear();
+            }
+            
+
         }else{
             n2.setFind(n1.getFind());
             
@@ -150,11 +193,18 @@ public class Dag implements Iterable<Node>{
                     n.setFind(n1.getFind());
                 }
             }
-            Set<Integer> set = n1.getCcpar();
+            Set<Integer> set = n2.getCcpar();
             for (int i : set){
                 n1.setCcpar(i);
             }
             n2.clearCcpar();
+            
+            if (forbidden) {
+                Set<Integer> l = this.forbiddenList.get(id2);
+                this.forbiddenList.get(id1).addAll(l);
+                this.forbiddenList.get(id2).clear();
+            }
+            
         }
     }
     
@@ -182,8 +232,29 @@ public class Dag implements Iterable<Node>{
      * @param id2 the ID of the second node
      */
     public void merge(final int id1, final int id2){
+        
         System.out.println("MERGING: " + id1 + " " + id2);
+        // check forbidden list
+        if (forbidden) {
+            if (this.forbiddenList.containsKey(id1)){
+                if(this.forbiddenList.get(id1).contains(id2)){
+                    System.out.println("CIAOO");
+                    this.forbiddenSat = false;
+                    return;
+                }
+                
+            }
+            if (this.forbiddenList.containsKey(id2)){
+                if (this.forbiddenList.get(id2).contains(id1)) {
+                    this.forbiddenSat = false;
+                    System.out.println("CIAOOO");
+                    return;
+                }
+                
+            }
+        }
         if (find(id1) != find(id2)) {
+            
             Set<Integer> Pi1 = Set.copyOf(this.ccpar(id1));
             Set<Integer> Pi2 = Set.copyOf(this.ccpar(id2));
             union(id1, id2);
@@ -191,6 +262,9 @@ public class Dag implements Iterable<Node>{
                 for (int t2 : Pi2) {
                     if ((t1!=t2) && (find(t1) != find(t2)) && congruent(t1, t2)) {
                         merge(t1, t2);
+                        if (!forbiddenSat) {
+                           return; 
+                        }
                     }
                 }
             }
@@ -242,6 +316,7 @@ public class Dag implements Iterable<Node>{
         for (Node node : nodes) {
             sb.append(node).append("\n");
         }
+        System.out.println("forbidden list: "+this.forbiddenList);
         return sb.toString();
     }
 

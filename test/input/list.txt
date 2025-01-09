@@ -1,0 +1,5 @@
+car(x) = car(y) & cdr(x) = cdr(y) & f(x) ! f(y) & -atom(x) & -atom(y)
+car(x) = y & cdr(x) = z & x!cons(y,z)
+-atom(x) & car(x) = y & cdr(x) = z & x ! cons(y,z)
+atom(x) & -atom(x)
+atom(x) & cons(x,y) = x

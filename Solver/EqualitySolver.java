@@ -1,3 +1,4 @@
+package Solver;
 import java.util.Set;
 
 
@@ -11,6 +12,16 @@ import java.util.Set;
  * in the theory of equality.</p>
  */
 public class EqualitySolver {
+
+    private boolean forbiddenListH = true;
+
+    public void setForbiddenListHToFalse(){
+        this.forbiddenListH = false;
+    }
+
+    public void setForbiddenListHToTrue(){
+        this.forbiddenListH = true;
+    }
     
     /**
      * Return SAT if the formula is satisfiable in theory of equality. UNSAT otherwise.
@@ -18,22 +29,45 @@ public class EqualitySolver {
      * @return true if the formula is satisfiable in theory of equality, false otherwise.
      */
     public boolean solve(String formula){
-        
+        formula = SATUtils.dropQuantifier(formula);
+        formula = SATUtils.rewritePredicate(formula);
         //initialize the dag
         Set<String> fnSet = SATUtils.extractSubterms(formula);
         Dag dag = new Dag(fnSet, formula);
 
+        
+
         //learn rules in the formula
         Set<String> eRules = SATUtils.extractERules(formula);
         Set<String> dRules = SATUtils.extractDRules(formula);
-        infEqualities(eRules, dag);
         
-        if (checkRules(dRules, dag)){
-            System.out.println("SAT");
-            return false;
+        if(forbiddenListH){
+            dag.setForbiddenList(dRules);
         }
-        System.out.println("UNSAT");
-        return true;
+
+        infEqualities(eRules, dag);
+        //System.out.println(dag.toString());
+        if(!dag.forbidden){
+            if (checkRules(dRules, dag)){
+                System.out.println("SAT");
+                return true;
+            }
+            System.out.println("UNSAT");
+            return false;
+        }else{
+            if (dag.forbiddenSat) {
+                if (checkRules(dRules, dag)){
+                    System.out.println("SAT");
+                    return true;
+                }
+                System.out.println("UNSAT");
+                return false;
+            }else{
+                System.out.println("UNSAT");
+                return false;
+            }
+        }
+
     }
     
     
