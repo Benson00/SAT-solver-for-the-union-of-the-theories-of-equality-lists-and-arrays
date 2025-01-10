@@ -238,7 +238,7 @@ public class Dag implements Iterable<Node>{
         if (forbidden) {
             if (this.forbiddenList.containsKey(id1)){
                 if(this.forbiddenList.get(id1).contains(id2)){
-                    System.out.println("CIAOO");
+                    System.out.println("forbidden!");
                     this.forbiddenSat = false;
                     return;
                 }
@@ -247,7 +247,7 @@ public class Dag implements Iterable<Node>{
             if (this.forbiddenList.containsKey(id2)){
                 if (this.forbiddenList.get(id2).contains(id1)) {
                     this.forbiddenSat = false;
-                    System.out.println("CIAOOO");
+                    System.out.println("forbidden!");
                     return;
                 }
                 
