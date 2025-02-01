@@ -1,0 +1,6 @@
+i1 = j & i1 ! i2 & select(a,j) = v1 & select(store(store(a,i1,v1),i2,v2),j) ! select(a,j)
+select(store(a,i,e), j) = e & i ! j
+select(store(a,i,e), j) = e & select(a,j) ! e
+select(store(a,i,e), j) = e & i = j & select(a,j) ! e
+select(store(store(a,j,f),i,e), k) = g & j ! k & i = j & select(a,k) ! g
+i1 = j & select(a,j) = v1 & select(store(store(a,i1,v1),i2,v2), j) ! select(a,j)

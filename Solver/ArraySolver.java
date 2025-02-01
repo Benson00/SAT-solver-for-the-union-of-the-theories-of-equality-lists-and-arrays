@@ -4,14 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class ArraySolver {
+public class ArraySolver implements TheorySolver{
 
     private boolean forbiddenListH = true;
 
+    @Override
     public void setForbiddenListHToFalse(){
         this.forbiddenListH = false;
     }
 
+    @Override
     public void setForbiddenListHToTrue(){
         this.forbiddenListH = true;
     }
@@ -149,9 +151,11 @@ public class ArraySolver {
         return output;
     }
 
+    @Override
     public boolean solve(String f){
         List<String> formulas = new ArrayList<String>();
         rewriteFormula(f, formulas); 
+        System.out.println("CIAO");
         for(String formula : formulas){
             if(solvePartial(formula)){
                 System.out.println("SAT");

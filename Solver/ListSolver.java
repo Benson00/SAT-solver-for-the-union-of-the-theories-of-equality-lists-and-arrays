@@ -3,15 +3,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class ListSolver {
+public class ListSolver implements TheorySolver{
 
     
     private boolean forbiddenListH = true;
 
+    @Override
     public void setForbiddenListHToFalse(){
         this.forbiddenListH = false;
     }
 
+    @Override
     public void setForbiddenListHToTrue(){
         this.forbiddenListH = true;
     }
@@ -76,6 +78,7 @@ public class ListSolver {
         return result;
     }
 
+    @Override
     public boolean solve(String formula){
         formula = SATUtils.dropQuantifier(formula);
         formula = SATUtils.rewritePredicate(formula);

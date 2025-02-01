@@ -11,18 +11,21 @@ import java.util.Set;
  * <p>The result of the evaluation indicates whether the given formula is satisfiable 
  * in the theory of equality.</p>
  */
-public class EqualitySolver {
+public class EqualitySolver implements TheorySolver{
 
     private boolean forbiddenListH = true;
 
+    @Override
     public void setForbiddenListHToFalse(){
         this.forbiddenListH = false;
     }
 
+    @Override
     public void setForbiddenListHToTrue(){
         this.forbiddenListH = true;
     }
     
+    @Override
     /**
      * Return SAT if the formula is satisfiable in theory of equality. UNSAT otherwise.
      * @param formula the formula 

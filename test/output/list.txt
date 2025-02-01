@@ -1,15 +1,16 @@
-FORMULA: car(x) = car(y) & cdr(x) = cdr(y) & f(x) ! f(y) & -atom(x) & -atom(y)
+Formula: car(x) = car(y) & cdr(x) = cdr(y) & f(x) ! f(y) & -atom(x) & -atom(y)
 UNSAT
-
-FORMULA: car(x) = y & cdr(x) = z & x!cons(y,z)
+Execution time: 77.2306 ms
+Memory used: 0.6817245483398438 MBFormula: car(x) = y & cdr(x) = z & x!cons(y,z)
 SAT
-
-FORMULA: -atom(x) & car(x) = y & cdr(x) = z & x ! cons(y,z)
+Execution time: 3.8036 ms
+Memory used: 0.0 MBFormula: -atom(x) & car(x) = y & cdr(x) = z & x ! cons(y,z)
 UNSAT
-
-FORMULA: atom(x) & -atom(x)
+Execution time: 10.0759 ms
+Memory used: 0.0 MBFormula: atom(x) & -atom(x)
 UNSAT
-
-FORMULA: atom(x) & cons(x,y) = x
+Execution time: 5.1037 ms
+Memory used: 0.44002532958984375 MBFormula: atom(x) & cons(x,y) = x
 UNSAT
-
+Execution time: 3.1323 ms
+Memory used: 0.0 MB

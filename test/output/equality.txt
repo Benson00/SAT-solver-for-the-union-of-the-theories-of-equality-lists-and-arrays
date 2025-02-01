@@ -1,21 +1,22 @@
-FORMULA: f(a,b) = a & f(f(a,b),b) ! a
+Formula: f(a,b) = a & f(f(a,b),b) ! a
 UNSAT
-
-FORMULA: f(f(f(a))) = a & f(f(f(f(f(a))))) = a & f(a) ! a
+Execution time: 62.8992 ms
+Memory used: 0.23974609375 MBFormula: f(f(f(a))) = a & f(f(f(f(f(a))))) = a & f(a) ! a
 UNSAT
-
-FORMULA: f(x,y) = f(y,x) & f(a,y) ! f(y,a)
+Execution time: 9.1717 ms
+Memory used: 0.0 MBFormula: f(x,y) = f(y,x) & f(a,y) ! f(y,a)
 SAT
-
-FORMULA: f(g(x)) = g(f(x)) & f(g(f(y))) = x & f(y) = x & g(f(x)) ! x
+Execution time: 3.3798 ms
+Memory used: 0.0 MBFormula: f(g(x)) = g(f(x)) & f(g(f(y))) = x & f(y) = x & g(f(x)) ! x
 UNSAT
-
-FORMULA: f(f(f(a))) = f(f(a)) & f(f(f(f(a)))) = a & f(a) ! a
+Execution time: 4.0928 ms
+Memory used: 0.0 MBFormula: f(f(f(a))) = f(f(a)) & f(f(f(f(a)))) = a & f(a) ! a
 UNSAT
-
-FORMULA: f(f(f(a))) = f(a) & f(f(a)) = a & f(a) ! a
+Execution time: 6.5513 ms
+Memory used: 0.0 MBFormula: f(f(f(a))) = f(a) & f(f(a)) = a & f(a) ! a
 SAT
-
-FORMULA: p(x) & f(f(x)) = x & f(f(f(x))) = x & -p(f(x))
+Execution time: 4.4628 ms
+Memory used: 0.44002532958984375 MBFormula: p(x) & f(f(x)) = x & f(f(f(x))) = x & -p(f(x))
 UNSAT
-
+Execution time: 16.878 ms
+Memory used: 0.0 MB

@@ -6,19 +6,18 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import Solver.EqualitySolver;
 
+import Solver.Solver;
+
 public class EqualityTest {
-    
-
     public static void main(String[] args) {
-
-        EqualitySolver ESolver = new EqualitySolver();
-        //ESolver.setForbiddenListHToFalse();
-
+        // Example formulas for testing
 
         String filePath = "test\\input\\equality.txt"; 
         String outputFilePath = "test\\output\\equality.txt"; 
+
         List<String> equalityTest = new ArrayList<String>();
         try {
             List<String> lines = Files.readAllLines(Paths.get(filePath));
@@ -33,24 +32,61 @@ public class EqualityTest {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
             for (String formula : equalityTest) {
-                writer.write("FORMULA: " + formula);
-                writer.newLine();
-
-                boolean solution = ESolver.solve(formula); 
-                System.out.println("\n\n");
-                if (solution) {
-                    writer.write("SAT");
-                }else{
-                    writer.write("UNSAT");
-                }
-                writer.newLine();
-                writer.newLine();
+                testCongruenceClosure(formula, writer);
             }
-            System.out.println("Results successfully written to file: " + outputFilePath);
-        } catch (IOException e) {
+            
+        }catch (IOException e) {
             System.err.println("Error writing to file: " + e.getMessage());
         }
+        
 
+    }
+    
+    public static void testCongruenceClosure(String formula, BufferedWriter writer) throws IOException {
+        // Measure execution time
+        long startTime = System.nanoTime();
+        
+        // Track memory usage before executing the congruence closure algorithm
+        Runtime runtime = Runtime.getRuntime();
+        long memoryBefore = runtime.totalMemory() - runtime.freeMemory();
+        
+        // Call your congruence closure function
+        boolean solution = solveCongruenceClosureE(formula);
+        
+        // Measure memory usage after execution
+        long memoryAfter = runtime.totalMemory() - runtime.freeMemory();
+        long memoryUsed = memoryAfter - memoryBefore;
+        
+        // Measure execution time
+        long endTime = System.nanoTime();
+        long duration = endTime - startTime;
+        
+        // Output results
+        System.out.println("Formula: " + formula);
+        System.out.println("Execution time: " + duration / 1_000_000.0 + " ms");
+        System.out.println("Memory used: " + memoryUsed / 1024.0 / 1024.0 + " MB");
+
+        writer.write("Formula: " + formula);
+        writer.newLine();
+        System.out.println("\n\n");
+        if (solution) {
+            writer.write("SAT");
+        }else{
+            writer.write("UNSAT");
+        }
+        writer.newLine();
+        writer.write("Execution time: " + duration / 1_000_000.0 + " ms");
+        writer.newLine();
+        writer.write("Memory used: " + memoryUsed / 1024.0 / 1024.0 + " MB");
+
+    }
+        
+    
+
+    public static boolean solveCongruenceClosureE(String formula) {
+            Solver solver = new Solver();
+            solver.setTheory(new EqualitySolver());
+            return solver.solve(formula);      
     }
 
 

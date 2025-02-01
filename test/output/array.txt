@@ -1,0 +1,19 @@
+Formula: i1 = j & i1 ! i2 & select(a,j) = v1 & select(store(store(a,i1,v1),i2,v2),j) ! select(a,j)
+UNSAT
+Execution time: 94.838 ms
+Memory used: 1.130462646484375 MBFormula: select(store(a,i,e), j) = e & i ! j
+SAT
+Execution time: 4.945 ms
+Memory used: 0.0 MBFormula: select(store(a,i,e), j) = e & select(a,j) ! e
+SAT
+Execution time: 3.8529 ms
+Memory used: 0.0 MBFormula: select(store(a,i,e), j) = e & i = j & select(a,j) ! e
+SAT
+Execution time: 4.5481 ms
+Memory used: 0.0 MBFormula: select(store(store(a,j,f),i,e), k) = g & j ! k & i = j & select(a,k) ! g
+UNSAT
+Execution time: 16.9877 ms
+Memory used: 0.44013214111328125 MBFormula: i1 = j & select(a,j) = v1 & select(store(store(a,i1,v1),i2,v2), j) ! select(a,j)
+SAT
+Execution time: 5.1833 ms
+Memory used: 0.0 MB

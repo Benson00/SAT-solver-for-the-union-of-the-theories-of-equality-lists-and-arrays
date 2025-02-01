@@ -6,15 +6,17 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import Solver.ArraySolver;
+import Solver.EqualitySolver;
 import Solver.ListSolver;
 import Solver.Solver;
 
-public class ListTest {
+public class Performance {
     public static void main(String[] args) {
         // Example formulas for testing
 
-        String filePath = "test\\input\\list.txt"; 
-        String outputFilePath = "test\\output\\list.txt"; 
+        String filePath = "test\\input\\equality.txt"; 
+        String outputFilePath = "test\\output\\equality.txt"; 
 
         List<String> equalityTest = new ArrayList<String>();
         try {
@@ -49,7 +51,7 @@ public class ListTest {
         long memoryBefore = runtime.totalMemory() - runtime.freeMemory();
         
         // Call your congruence closure function
-        boolean solution = solveCongruenceClosureL(formula);
+        boolean solution = solveCongruenceClosureE(formula);
         
         // Measure memory usage after execution
         long memoryAfter = runtime.totalMemory() - runtime.freeMemory();
@@ -80,9 +82,22 @@ public class ListTest {
     }
         
     
+
+    public static boolean solveCongruenceClosureE(String formula) {
+            Solver solver = new Solver();
+            solver.setTheory(new EqualitySolver());
+            return solver.solve(formula);      
+    }
+
     public static boolean solveCongruenceClosureL(String formula) {
         Solver solver = new Solver();
         solver.setTheory(new ListSolver());
+        return solver.solve(formula);
+    }
+
+    public static boolean solveCongruenceClosureA(String formula) {
+        Solver solver = new Solver();
+        solver.setTheory(new ArraySolver());
         return solver.solve(formula);
     }
 }
