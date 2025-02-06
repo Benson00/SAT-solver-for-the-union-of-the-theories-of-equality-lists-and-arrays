@@ -15,7 +15,7 @@ public class ArrayTest {
         // Example formulas for testing
 
         String filePath = "test\\input\\array.txt"; 
-        String outputFilePath = "test\\output\\array.txt"; 
+        String outputFilePath = "test\\output\\array2.txt"; 
 
         List<String> equalityTest = new ArrayList<String>();
         try {
@@ -77,6 +77,7 @@ public class ArrayTest {
         writer.write("Execution time: " + duration / 1_000_000.0 + " ms");
         writer.newLine();
         writer.write("Memory used: " + memoryUsed / 1024.0 / 1024.0 + " MB");
+        writer.newLine();
 
     }
         
@@ -85,7 +86,9 @@ public class ArrayTest {
 
     public static boolean solveCongruenceClosureA(String formula) {
         Solver solver = new Solver();
-        solver.setTheory(new ArraySolver());
+        ArraySolver theory = new ArraySolver();
+        theory.setForbiddenListHToTrue();
+        solver.setTheory(theory);
         return solver.solve(formula);
     }
 }

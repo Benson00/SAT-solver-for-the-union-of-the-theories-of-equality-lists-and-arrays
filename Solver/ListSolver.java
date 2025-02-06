@@ -99,7 +99,7 @@ public class ListSolver implements TheorySolver{
             • add cdr(n) to the DAG and merge cdr(n) n.args[2] 
         */
         int id = dag.countID();
-        int size = dag.countID();
+        int size = dag.countID()+1;
         for (int i = 0; i < size; i++){
             Node n = dag.getNode(i);
             if (n.getFn().equals("cons")) {
